@@ -3,8 +3,79 @@ package main
 import (
 	"fmt"
 	// "sync"
-	//	"time"
+	"time"
 )
+
+/*
+Default selection, for break
+
+time.Tick, time.Afterはtime型のchannelを返してくれる関数
+
+*/
+func main() {
+	tick := time.Tick(100 * time.Millisecond)
+	boom := time.After(500 * time.Millisecond)
+Loop:
+	for {
+		select {
+		case t := <-tick: // channelを取り出して変数に渡すことができる
+			fmt.Println("tick.", t)
+		case <-boom: // 変数に渡さなくても良い
+			fmt.Println("BOOM!")
+			break Loop // returnでも良いが、breakを使う場合はこう書く
+			// return
+		default:
+			fmt.Println("    .")
+			time.Sleep(50 * time.Millisecond)
+		}
+	}
+}
+
+/*
+channelとselect
+selectを用いたchannelの受信
+
+それぞれにchannelを用意し、並列処理させたい。
+
+goroutine1    goroutine2
+↓ chan ↑      ↓ chan ↑
+------------------------
+|      func main()     |
+------------------------
+
+例えば2つ以上のネットワークのパケットを受信して処理するケースとか。
+ネットワークの速度は対象のwebサイトの回線とかによってバラバラなので、
+channelを分けて処理するとスムーズ。
+*/
+// func goroutine1(ch chan string) {
+// 	for {
+// 		ch <- "packet from 1"
+// 		time.Sleep(3 * time.Second)
+// 	}
+// }
+//
+// func goroutine2(ch chan string) {
+// 	for {
+// 		ch <- "packet from 2"
+// 		time.Sleep(2 * time.Second)
+// 	}
+// }
+//
+// func main() {
+// 	c1 := make(chan string)
+// 	c2 := make(chan string)
+// 	go goroutine1(c1)
+// 	go goroutine2(c2)
+//
+// 	for {
+// 		select {
+// 		case msg1 := <-c1:
+// 			fmt.Println(msg1)
+// 		case msg2 := <-c2:
+// 			fmt.Println(msg2)
+// 		}
+// 	}
+// }
 
 /*
 fan-out fan-in
@@ -19,40 +90,49 @@ main()
 
 上記のように、goroutineで並列処理したものを出力（fanction-out)
 次のgoroutineへ渡して処理（fanction-in)　する的なやつ
+
+例えば10人のユーザがいて(最初のgoroutineで処理)
+それぞれにパーミッションを与え（2つめのgoroutineで処理）
+そして各ユーザーにメールを返す（3つめのgoroutineで処理）
+という感じの処理など、複数のユーザーに対して逐次処理するのではなく、
+fan-out, fan-inで並列処理する感じに使える。
 */
-func producer(first chan int) {
-	defer close(first)
-	for i := 0; i < 10; i++ {
-		first <- i
-	}
-}
-
-func multi2(first <-chan int, second chan<- int) {
-	defer close(second)
-	for i := range first {
-		second <- i * 2
-	}
-}
-
-func multi4(second <-chan int, third chan<- int) {
-	defer close(third)
-	for i := range second {
-		third <- i * 2
-	}
-}
-
-func main() {
-	first := make(chan int)
-	second := make(chan int)
-	third := make(chan int)
-
-	go producer(first)
-	go multi2(first, second)
-	go multi4(second, third)
-	for result := range third {
-		fmt.Println(result)
-	}
-}
+// func producer(first chan int) {
+// 	defer close(first)
+// 	for i := 0; i < 10; i++ {
+// 		first <- i
+// 	}
+// }
+//
+// func multi2(first <-chan int, second chan<- int) {
+// 	// 受信用のchannelはfirst <-chan int
+// 	// 送信用はsecond chan<- int
+// 	// というふうに記述できる。
+// 	defer close(second)
+// 	for i := range first {
+// 		second <- i * 2
+// 	}
+// }
+//
+// func multi4(second <-chan int, third chan<- int) {
+// 	defer close(third)
+// 	for i := range second {
+// 		third <- i * 2
+// 	}
+// }
+//
+// func main() {
+// 	first := make(chan int)
+// 	second := make(chan int)
+// 	third := make(chan int)
+//
+// 	go producer(first)
+// 	go multi2(first, second)
+// 	go multi4(second, third)
+// 	for result := range third {
+// 		fmt.Println(result)
+// 	}
+// }
 
 /*
 producerとconsumer
@@ -136,6 +216,12 @@ channel
 データのやりとりをする場合（returnとかで値を返したりとか）、channelを使う。
 make(chan int)がキューみたいな感じになってる。
 バッファを用意して、channelの数を指定したい場合はmake(chan int, 2)とかにする。
+
+goroutine1 → chan ← goroutine2
+             ↓  ↓
+------------------------------
+|         func main()        |
+------------------------------
 */
 // func goroutine(s []int, c chan int) {
 // 	sum := 0
