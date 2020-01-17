@@ -4,6 +4,11 @@ import (
 	"testing"
 )
 
+func ExamplePerson_Say() {
+	p := Person{"Hoge", 13}
+	p.Say()
+}
+
 func TestSay(t *testing.T) {
 	p := Person{Name: "Mike", Age: 3}
 	tests := []struct {
