@@ -1,9 +1,5 @@
 package mypkg
 
-import (
-	"fmt"
-)
-
 // Person is a struct that has name and age.
 type Person struct {
 	Name string
@@ -11,6 +7,6 @@ type Person struct {
 }
 
 // Say returns "Hello!".
-func (p *Person) Say() {
-	fmt.Printf("Hello, I'm %v\n", p.Name)
+func (p *Person) Say() string {
+	return "Hello, I'm " + p.Name
 }

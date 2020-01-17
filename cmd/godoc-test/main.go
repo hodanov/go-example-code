@@ -13,5 +13,5 @@ func main() {
 		Name: "Hoge",
 		Age:  1,
 	}
-	p.Say()
+	fmt.Println(p.Say())
 }
