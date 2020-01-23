@@ -6,15 +6,18 @@ package main
 
 import (
 	"fmt"
+
 	"gopkg.in/ini.v1"
 )
 
+// ConfigList is a type to store parameters of config.ini.
 type ConfigList struct {
 	Port      int
 	DbName    string
 	SQLDriver string
 }
 
+// Config is a variable to init ConfigList.
 var Config ConfigList
 
 // init()はmain()よりも前に呼び出される初期化用の関数。
