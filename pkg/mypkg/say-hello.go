@@ -11,7 +11,7 @@ func (p *Person) SayHello() string {
 	return "Hello, I'm " + p.Name
 }
 
-// SayHello returns Person's age.
+// SayAge returns Person's age.
 func (p *Person) SayAge() string {
 	return "Hello, I'm " + string(p.Age) + " years old."
 }
