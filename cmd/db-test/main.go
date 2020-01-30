@@ -2,8 +2,7 @@ package main
 
 import (
 	"log"
-
-	_ "github.com/lib/pq"
+	"math/rand"
 )
 
 func main() {
@@ -14,4 +13,9 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
+	err = Insert("hogehoge", rand.Intn(100))
+	if err != nil {
+		log.Fatal(err)
+	}
 }
