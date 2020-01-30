@@ -14,7 +14,7 @@ func main() {
 	}
 	defer db.Close()
 
-	err = Insert("hogehoge", rand.Intn(100))
+	err = Insert(db, "hogehoge", rand.Intn(100))
 	if err != nil {
 		log.Fatal(err)
 	}
