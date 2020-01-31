@@ -18,4 +18,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	err = MultiSelect(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = SingleSelect(db)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
