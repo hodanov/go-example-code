@@ -62,3 +62,21 @@ func SingleSelect(db *sql.DB) error {
 	fmt.Println(user)
 	return nil
 }
+
+// Delete deletes a record from the table.
+func Delete(db *sql.DB) error {
+	stmt := `DELETE FROM users WHERE name = $1`
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	_, err = db.Exec(stmt, "hogehoge")
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit()
+	return nil
+}
