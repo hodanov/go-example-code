@@ -7,7 +7,7 @@ import (
 	"gopkg.in/ini.v1"
 )
 
-// List reads config from config.ini.
+// List is a struct to store config data from config.ini.
 type List struct {
 	APIKey    string
 	APISecret string
