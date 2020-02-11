@@ -11,6 +11,7 @@ import (
 type List struct {
 	APIKey    string
 	APISecret string
+	LogFile   string
 }
 
 // Config ...
@@ -26,5 +27,6 @@ func init() {
 	Config = List{
 		APIKey:    cfg.Section("bitflyer").Key("api_key").String(),
 		APISecret: cfg.Section("bitflyer").Key("api_secret").String(),
+		LogFile:   cfg.Section("gotrading").Key("log_file").String(),
 	}
 }
