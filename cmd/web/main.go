@@ -1,10 +1,10 @@
 package main
 
 import (
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"text/template"
 )
 
 // Page represents blog post.
